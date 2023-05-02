@@ -73,12 +73,10 @@ keys = [
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    # Toggle E tween different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-#    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod1], "Space", lazy.spawn("rofi -theme rounded-green-dark -show drun"), desc="Spawn a command using a prompt widget"),
 
 
@@ -95,8 +93,6 @@ keys = [
 ##Misc keybinds
     Key([], "Print", lazy.spawn("flameshot gui"), desc='Screenshot'),
     Key(["control"], "Print", lazy.spawn("flameshot full -c -p ~/Pictures/"), desc='Screenshot'),
-    Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
-    Key([mod, "control"], "w", lazy.spawn("feh --bg-fill $HOME/.config/qtile/Wallpaper/Skyscraper.png"), desc="Reload wallpaper"),
     Key([mod], "e", lazy.spawn(filemanager), desc="Open file manager")
 
 ]   
@@ -129,43 +125,47 @@ for i in groups:
 ###𝙇𝙖𝙮𝙤𝙪𝙩###
 
 layouts = [
-    layout.Columns( margin=4, border_focus='#00DC6C',
-	    border_normal='#1F1D2E', 
-        border_width=3
+    layout.Columns(
+        margin = 0,
+        border_focus = '#00DC6C',
+        border_normal = '#1F1D2E', 
+        border_width = 3,
     ),
     
-    layout.Max(	border_focus='#00DC6C',
-	    border_normal='#1F1D2E',
-	    margin=4,
-	    border_width=0,
+    layout.Max(
+        border_focus = '#00DC6C',
+        border_normal = '#1F1D2E',
+        margin = 4,
+        border_width = 0,
     ),
     
-    layout.Floating( border_focus='#00DC6C',
-	    border_normal='#1F1D2E',
-	    margin=4,
-	    border_width=0,
-	),
+    layout.Floating(
+        border_focus = '#00DC6C',
+        border_normal = '#1F1D2E',
+        margin = 4,
+        border_width = 3,
+    ),
     # Try more layouts by unleashing below layouts
    #  layout.Stack(num_stacks=2),
    #  layout.Bsp(),
-     layout.Matrix(	border_focus='#00DC6C',
-	    border_normal='#1F1D2E',
-	    margin=4,
-	    border_width=0,
-	),
-     layout.MonadTall( border_focus='#00DC6C',
-	    border_normal='#1F1D2E',
-        margin=4,
-	    border_width=0,
-	),
-    layout.MonadWide( border_focus='#00DC6C',
-	    border_normal='#1F1D2E',
-	    margin=4,
-	    border_width=0,
-	),
-   #  layout.RatioTile(),
-     layout.Tile( border_focus='#00DC6C',
-	    border_normal='#1F1D2E',
+     layout.Matrix(
+        border_focus = '#00DC6C',
+        border_normal = '#1F1D2E',
+        margin = 4,
+        border_width = 3,
+    ),
+     
+    layout.MonadWide(
+        border_focus = '#00DC6C',
+        border_normal = '#1F1D2E',
+        margin = 4,
+        border_width = 3,
+    ),
+    layout.Tile(
+        border_focus = '#00DC6C',
+        border_normal = '#1F1D2E',
+        margin = 4,
+        border_width = 3,
     ),
    #  layout.TreeTab(),
    #  layout.VerticalTile(),
@@ -173,11 +173,10 @@ layouts = [
 ]
 
 
-
 widget_defaults = dict(
-    font="sans",
-    fontsize=12,
-    padding=4,
+    font = "sans",
+    fontsize = 12,
+    padding = 4,
 )
 extension_defaults = [ widget_defaults.copy()]
 
@@ -193,194 +192,214 @@ def open_btop():
 # █▄█ █▀█ █▀▄
  
 screens = [
-
     Screen(
-        top=bar.Bar(
-            [
-				widget.Spacer(length=20,
-                    background='#033C4B',
+        top = bar.Bar(
+            [   
+                widget.Spacer(
+                    length = 20,
+                    background = '#033C4B',
                 ),
-				
+                
+                widget.Image(
+                    filename = '~/.config/qtile/Assets/launch_Icon.png',
+                    margin = 2,
+                    background = '#033C4B',
+                    mouse_callbacks = {'Button1': open_launcher},
+                ),
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/launch_Icon.png',
-                    margin=2,
-                    background='#033C4B',
-                    mouse_callbacks= {'Button1': open_launcher}
-                ),
-
-                widget.Image(
-                    filename='~/.config/qtile/Assets/6.png',
+                    filename = '~/.config/qtile/Assets/6.png',
                 ),
 
                 widget.GroupBox(
-                    fontsize=16,
-                    borderwidth=3,
-                    highlight_method='block',
-                    active='#56D9C7', #Active workspaces circle color
-                    block_highlight_text_color="#00F076", #Current workspace circle color
-                    highlight_color='#4B427E',
-                    inactive='#052A25', #Empty workspace circle
-                    foreground='#046F5F',
-                    background='#046F5F',
-                    this_current_screen_border='#00361A', #Circle background color
-                    this_screen_border='#52548D',
-                    other_current_screen_border='#52548D',
-                    other_screen_border='#52548D',
-                    urgent_border='#52548D',
-                    rounded=True,
-                    disable_drag=True,
+                    fontsize = 16,
+                    borderwidth = 3,
+                    highlight_method = 'block',
+                    active = '#56D9C7', #Active workspaces circle color
+                    block_highlight_text_color = "#00F076", #Current workspace circle color
+                    highlight_color = '#4B427E',
+                    inactive = '#052A25', #Empty workspace circle
+                    foreground = '#046F5F',
+                    background = '#046F5F',
+                    this_current_screen_border = '#00361A', #Circle background color
+                    this_screen_border = '#52548D',
+                    other_current_screen_border = '#52548D',
+                    other_screen_border = '#52548D',
+                    urgent_border = '#52548D',
+                    rounded = True,
+                    disable_drag = True,
                  ),
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/5.png',
+                    filename = '~/.config/qtile/Assets/5.png',
                 ),
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/2.png',
+                    filename = '~/.config/qtile/Assets/2.png',
                 ),
 
                 widget.CurrentLayoutIcon(
-                    background='#046F5F',
+                    background = '#046F5F',
                     padding = 0,
                     scale = 0.5,
                 ),
 
-                    widget.CurrentLayout(
-                    background='#046F5F',
-                    font= 'IBM Plex Sans Medium',
+                widget.CurrentLayout(
+                    background ='#046F5F',
+                    font = 'IBM Plex Sans Medium',
                     fontsize = 15,
                 ),
 
-
-
                 widget.Image(
-                    filename='~/.config/qtile/Assets/5.png',                
+                    filename = '~/.config/qtile/Assets/5.png',                
                 ),
 
-
                 widget.Image(
-                    filename='~/.config/qtile/Assets/2.png',
+                    filename = '~/.config/qtile/Assets/2.png',
                 ),
-
 
                 widget.WindowName(
                     background = '#046F5F',
                     format = "{name}",
-                    font='IBM Plex Sans Medium',
+                    font = 'IBM Plex Sans Medium',
                     fontsize = 15,
                     empty_group_string = 'Desktop',
                 ),
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/5.png',                
+                    filename = '~/.config/qtile/Assets/5.png',                
                 ),  
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/1.png',                
-                    background='#52548D',
-                ),    
+                    filename = '~/.config/qtile/Assets/1.png',                
+                    background = '#52548D',
+                ),
+
+                widget.Image(
+                    filename = '~/.config/qtile/Assets/Bar-Icons/microchip-solid-white-big.png',
+                    background = '#046F5F',
+                    margin = 5,
+                    scale = True,
+                    mouse_callbacks = {'Button1': open_btop},
+                ),
 
                 widget.CPU(
-                    font="IBM Plex Sans Medium",
-                    fontsize=15,
-                    padding=10,
-                    background='#046F5F',
-                    mouse_callbacks= {'Button1': open_btop},
+                    font = "IBM Plex Sans Medium",
+                    fontsize = 15,
+                    padding = 2,
+                    background = '#046F5F',
+                    mouse_callbacks = {'Button1': open_btop},
                 ),
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/5.png',
+                    filename = '~/.config/qtile/Assets/5.png',
                 ),
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/2.png',                
-                    background='#52548D',
+                    filename = '~/.config/qtile/Assets/2.png',                
+                    background = '#52548D',
                 ),  
   
-
                 widget.Systray(
-                    background='#046F5F',
-                    fontsize=7,
+                    background = '#046F5F',
+                    fontsize = 7,
                 ),
 
-
                 widget.Image(
-                    filename='~/.config/qtile/Assets/5.png',
+                    filename = '~/.config/qtile/Assets/5.png',
                 ),
 
-
                 widget.Image(
-                    filename='~/.config/qtile/Assets/2.png',                
-                    background='#52548D',
-                ),                       
+                    filename = '~/.config/qtile/Assets/2.png',                
+                    background = '#52548D',
+                ),                    
                                                 
-                widget.TextBox(
-                    text="﬙",
-                    font="Font Awesome 6 Free Solid",
-                    fontsize=20,
-                    padding=6,
-                    background='#046F5F',
-                    mouse_callbacks= {'Button1': open_btop},
-                ),
-               
-                widget.Memory(format='{MemUsed: .0f}{mm}',
-                    font="IBM Plex Sans Medium",
-                    fontsize=15,
-                    padding=1,
-                    background='#046F5F',
-                    mouse_callbacks= {'Button1': open_btop},
+                widget.Image(
+                    filename = '~/.config/qtile/Assets/Bar-Icons/memory-solid-big.png',
+                    background = '#046F5F',
+                    margin_y = 3.5,
+                    scale = True,
+                    mouse_callbacks = {'Button1': open_btop},
                 ),
 
-                widget.TextBox(
-                    text="",
-                    font="Font Awesome 6 Free Solid",
-                    fontsize=12,
-                    padding=6,
-                    background='#046F5F',
+                widget.Spacer(
+                    length = 2,
+                    background = '#046f5f',
+                ),  
+               
+                widget.Memory(
+                    format = '{MemUsed: .0f}{mm}',
+                    font = "IBM Plex Sans Medium",
+                    fontsize = 15,
+                    padding = 2,
+                    background = '#046F5F',
+                    mouse_callbacks = {'Button1': open_btop},
                 ),
+
+                widget.Spacer(
+                    length = 6,
+                    background = '#046f5f',
+                ),  
+
+                widget.Image(
+                    filename = '~/.config/qtile/Assets/Bar-Icons/volume-high-solid.png',
+                    background = '#046F5F',
+                    margin_y = 3,
+                    scale = True,
+                    mouse_callbacks = {'Button1': open_btop},
+                ),
+
+                widget.Spacer(
+                    length = 4,
+                    background = '#046f5f',
+                ), 
                 
-                widget.PulseVolume(font='IBM Plex Sans Medium',
-                    fontsize=15,
-                    padding=2,
-                    background='#046F5F',
+                widget.PulseVolume(
+                    font= 'IBM Plex Sans Medium',
+                    fontsize = 15,
+                    padding = 3,
+                    background = '#046F5F',
+                    device = 'default',
                 ),
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/5.png',
+                    filename = '~/.config/qtile/Assets/5.png',
                 ),                
 
 
                 widget.Image(
-                    filename='~/.config/qtile/Assets/1.png',                
-                    background='#4B427E',
+                    filename = '~/.config/qtile/Assets/1.png',                
+                    background = '#4B427E',
                 ),
 
-                widget.TextBox(
-                    text="",
-                    font="JetBrains Mono Bold",
-                    fontsize=20,
-                    padding=0,
-                    background='#046f5f',
-                ),
-        
-                widget.Clock(
-                    format='  %H:%M:%S %p',
-                    background='#046f5f',
-                    font="IBM Plex Sans Medium",
-                    fontsize = 15,
-                    padding=0,
+                widget.Image(
+                    filename = '~/.config/qtile/Assets/Bar-Icons/calendar-check-solid.png',
+                    background = '#046F5F',
+                    margin_y = 5,
+                    scale = True,
+                    mouse_callbacks = {'Button1': open_btop},
                 ),
 
                 widget.Spacer(
-                    length=18,
-                    background='#046f5f',
+                    length = 8,
+                    background = '#046f5f',
+                ), 
+        
+                widget.Clock(
+                    format = '%d/%m/%y %H:%M', #Here you can change between USA or another timezone
+                    background = '#046f5f',
+                    font = "IBM Plex Sans Medium",
+                    fontsize = 15,
+                    padding = 0,
                 ),
 
-                
+                widget.Spacer(
+                    length = 18,
+                    background = '#046f5f',
+                ),
             ],
-            30,
-            margin = [6,6,6,6]
+            30,  # Bar size
+            margin = [6,6,6,6] # Bar margin (Top,Right,Bottom,Left)
         ),
     ),
 ]
@@ -398,9 +417,9 @@ follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
 floating_layout = layout.Floating(
-	border_focus='#1F1D2E',
+	border_focus='#00DC6C',
 	border_normal='#1F1D2E',
-	border_width=0,
+	border_width=3,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
@@ -424,7 +443,7 @@ def autostart():
     subprocess.call([home])
 
 auto_fullscreen = True
-focus_on_window_activation = "focus" #or smart
+focus_on_window_activation = "smart" #or focus
 reconfigure_screens = True
 
 # If things like steam games want to auto-minimize themselves when losing
