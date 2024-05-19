@@ -32,7 +32,7 @@ from libqtile.dgroups import simple_key_binder
 
 
 mod = "mod4" #aka Windows key
-terminal = "alacritty"
+terminal = "alacritty" #This is an example on how flexible Qtile is, you create variables then use them in a keybind for example (see below)
 mod1 = "mod1" #alt key
 filemanager = "thunar"
 
@@ -61,7 +61,8 @@ keys = [
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
-    Key([mod], "f", lazy.window.toggle_fullscreen()),
+    Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle focused window to fullscreen"),
+    Key([mod], "v", lazy.window.toggle_floating(), desc="Toggle focused window to floating"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
@@ -77,31 +78,31 @@ keys = [
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod1], "Space", lazy.spawn("rofi -theme rounded-green-dark -show drun"), desc="Spawn a command using a prompt widget"),
+    Key([mod1], "Space", lazy.spawn("rofi -show drun -theme /home/array/.config/rofi/launchers/type-1/style-1.rasi"), desc="Spawn a command using a prompt widget"),
 
 
 ##CUSTOM
     Key([], "XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume 0 +1%"), desc='Volume Up'),
     Key([], "XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume 0 -1%"), desc='volume down'),
-    Key([], "XF86AudioMute", lazy.spawn("pulsemixer --toggle-mute"), desc='Volume Mute'),
+    Key([], "XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"), desc='Volume Mute'),
     Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause"), desc='playerctl'),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc='playerctl'),
     Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc='playerctl'),
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl s 5%+"), desc='brightness UP'),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl s 5%-"), desc='brightness Down'),
-    
+
 ##Misc keybinds
     Key([], "Print", lazy.spawn("flameshot gui"), desc='Screenshot'),
     Key(["control"], "Print", lazy.spawn("flameshot full -c -p ~/Pictures/"), desc='Screenshot'),
     Key([mod], "e", lazy.spawn(filemanager), desc="Open file manager")
 
-]   
+]
 
 # █▀▀ █▀█ █▀█ █░█ █▀█ █▀
 # █▄█ █▀▄ █▄█ █▄█ █▀▀ ▄█
 
 
-groups = [Group(f"{i+1}", label="⬤") for i in range(9)]
+groups = [Group(f"{i+1}", label="⬤") for i in range(9)] #Be careful modifying this, otherwise qtile config will break
 
 for i in groups:
     keys.extend(
@@ -128,21 +129,21 @@ layouts = [
     layout.Columns(
         margin = 0,
         border_focus = '#00DC6C',
-        border_normal = '#1F1D2E', 
+        border_normal = '#1F1D2E',
         border_width = 3,
     ),
-    
+
     layout.Max(
         border_focus = '#00DC6C',
         border_normal = '#1F1D2E',
-        margin = 4,
+        margin = 0,
         border_width = 0,
     ),
-    
+
     layout.Floating(
         border_focus = '#00DC6C',
         border_normal = '#1F1D2E',
-        margin = 4,
+        margin = 0,
         border_width = 3,
     ),
     # Try more layouts by unleashing below layouts
@@ -151,20 +152,20 @@ layouts = [
      layout.Matrix(
         border_focus = '#00DC6C',
         border_normal = '#1F1D2E',
-        margin = 4,
+        margin = 0,
         border_width = 3,
     ),
-     
+
     layout.MonadWide(
         border_focus = '#00DC6C',
         border_normal = '#1F1D2E',
-        margin = 4,
+        margin = 0,
         border_width = 3,
     ),
     layout.Tile(
         border_focus = '#00DC6C',
         border_normal = '#1F1D2E',
-        margin = 4,
+        margin = 0,
         border_width = 3,
     ),
    #  layout.TreeTab(),
@@ -182,27 +183,29 @@ extension_defaults = [ widget_defaults.copy()]
 
 
 def open_launcher():
-    qtile.cmd_spawn("rofi -theme rounded-green-dark -show drun")
+    qtile.spawn("rofi -theme rounded-green-dark -show drun")
 
 def open_btop():
-    qtile.cmd_spawn("alacritty --hold -e btop")
+    qtile.spawn("alacritty --hold -e btop")
 
-            
+def open_pavucontrol():
+    qtile.spawn("pavucontrol")
+
+
 # █▄▄ ▄▀█ █▀█
 # █▄█ █▀█ █▀▄
- 
+
 screens = [
     Screen(
         top = bar.Bar(
-            [   
+            [
                 widget.Spacer(
-                    length = 20,
+                    length = 18,
                     background = '#033C4B',
                 ),
-                
+
                 widget.Image(
                     filename = '~/.config/qtile/Assets/launch_Icon.png',
-                    margin = 2,
                     background = '#033C4B',
                     mouse_callbacks = {'Button1': open_launcher},
                 ),
@@ -213,7 +216,7 @@ screens = [
 
                 widget.GroupBox(
                     fontsize = 16,
-                    borderwidth = 3,
+                    borderwidth = 0,
                     highlight_method = 'block',
                     active = '#56D9C7', #Active workspaces circle color
                     block_highlight_text_color = "#00F076", #Current workspace circle color
@@ -240,18 +243,19 @@ screens = [
 
                 widget.CurrentLayoutIcon(
                     background = '#046F5F',
-                    padding = 0,
+                    padding = 4,
                     scale = 0.5,
                 ),
 
                 widget.CurrentLayout(
                     background ='#046F5F',
-                    font = 'IBM Plex Sans Medium',
+                    font = 'IBM Plex Mono Medium',
                     fontsize = 15,
+                    padding = 0,
                 ),
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/5.png',                
+                    filename = '~/.config/qtile/Assets/5.png',
                 ),
 
                 widget.Image(
@@ -261,32 +265,27 @@ screens = [
                 widget.WindowName(
                     background = '#046F5F',
                     format = "{name}",
-                    font = 'IBM Plex Sans Medium',
-                    fontsize = 15,
+                    font = 'IBM Plex Mono Medium',
+                    fontsize = 14,
                     empty_group_string = 'Desktop',
+                    padding = 0,
                 ),
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/5.png',                
-                ),  
+                    filename = '~/.config/qtile/Assets/5.png',
+                ),
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/1.png',                
+                    filename = '~/.config/qtile/Assets/1.png',
                     background = '#52548D',
-                ),
-
-                widget.Image(
-                    filename = '~/.config/qtile/Assets/Bar-Icons/microchip-solid-white-big.png',
-                    background = '#046F5F',
-                    margin = 5,
-                    scale = True,
-                    mouse_callbacks = {'Button1': open_btop},
                 ),
 
                 widget.CPU(
-                    font = "IBM Plex Sans Medium",
+                    font = "IBM Plex Mono Medium",
+                    format='CPU:({load_percent:.1f}%/{freq_current}GHz)',
                     fontsize = 15,
-                    padding = 2,
+                    margin = 0,
+                    padding = 0,
                     background = '#046F5F',
                     mouse_callbacks = {'Button1': open_btop},
                 ),
@@ -296,13 +295,14 @@ screens = [
                 ),
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/2.png',                
+                    filename = '~/.config/qtile/Assets/2.png',
                     background = '#52548D',
-                ),  
-  
+                ),
+
                 widget.Systray(
                     background = '#046F5F',
-                    fontsize = 7,
+                    icon_size = 24,
+                    padding = 3,
                 ),
 
                 widget.Image(
@@ -310,28 +310,20 @@ screens = [
                 ),
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/2.png',                
+                    filename = '~/.config/qtile/Assets/2.png',
                     background = '#52548D',
-                ),                    
-                                                
-                widget.Image(
-                    filename = '~/.config/qtile/Assets/Bar-Icons/memory-solid-big.png',
-                    background = '#046F5F',
-                    margin_y = 3.5,
-                    scale = True,
-                    mouse_callbacks = {'Button1': open_btop},
                 ),
 
                 widget.Spacer(
-                    length = 2,
+                    length = 0,
                     background = '#046f5f',
-                ),  
-               
+                ),
+
                 widget.Memory(
-                    format = '{MemUsed: .0f}{mm}',
-                    font = "IBM Plex Sans Medium",
+                    format = 'RAM:({MemUsed:.0f}MB/{MemTotal:.0f}MB)',
+                    font = "IBM Plex Mono Medium",
                     fontsize = 15,
-                    padding = 2,
+                    padding = 0,
                     background = '#046F5F',
                     mouse_callbacks = {'Button1': open_btop},
                 ),
@@ -339,56 +331,70 @@ screens = [
                 widget.Spacer(
                     length = 6,
                     background = '#046f5f',
-                ),  
+                ),
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/Bar-Icons/volume-high-solid.png',
+                    filename = '~/.config/qtile/Assets/Bar-Icons/volume.svg',
                     background = '#046F5F',
                     margin_y = 3,
                     scale = True,
-                    mouse_callbacks = {'Button1': open_btop},
+                    mouse_callbacks = {'Button1': open_pavucontrol},
                 ),
 
                 widget.Spacer(
                     length = 4,
                     background = '#046f5f',
-                ), 
-                
+                ),
+
                 widget.PulseVolume(
-                    font= 'IBM Plex Sans Medium',
+                    font= 'IBM Plex Mono Medium',
                     fontsize = 15,
-                    padding = 3,
+                    padding = 0,
                     background = '#046F5F',
-                    device = 'default',
                 ),
 
                 widget.Image(
                     filename = '~/.config/qtile/Assets/5.png',
-                ),                
+                ),
 
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/1.png',                
+                    filename = '~/.config/qtile/Assets/1.png',
                     background = '#4B427E',
                 ),
 
                 widget.Image(
-                    filename = '~/.config/qtile/Assets/Bar-Icons/calendar-check-solid.png',
+                    filename = '~/.config/qtile/Assets/Bar-Icons/calendar.svg',
                     background = '#046F5F',
-                    margin_y = 5,
+                    margin_y = 3,
                     scale = True,
-                    mouse_callbacks = {'Button1': open_btop},
                 ),
 
                 widget.Spacer(
-                    length = 8,
+                    length = 6,
                     background = '#046f5f',
-                ), 
-        
+                ),
+
                 widget.Clock(
-                    format = '%d/%m/%y %H:%M', #Here you can change between USA or another timezone
+                    format = '%d/%m/%y ', #Here you can change between USA or another timezone
                     background = '#046f5f',
-                    font = "IBM Plex Sans Medium",
+                    font = "IBM Plex Mono Medium",
+                    fontsize = 15,
+                    padding = 0,
+                ),
+
+                widget.Image(
+                    filename = '~/.config/qtile/Assets/Bar-Icons/clock.svg',
+                    background = '#046F5F',
+                    margin_y = 3,
+                    margin_x = 5,
+                    scale = True,
+                ),
+
+                widget.Clock(
+                    format = '%H:%M',
+                    background = '#046f5f',
+                    font = "IBM Plex Mono Medium",
                     fontsize = 15,
                     padding = 0,
                 ),
@@ -398,8 +404,8 @@ screens = [
                     background = '#046f5f',
                 ),
             ],
-            30,  # Bar size
-            margin = [6,6,6,6] # Bar margin (Top,Right,Bottom,Left)
+            30,  # Bar size (all axis)
+            margin = [0,8,6,8] # Bar margin (Top,Right,Bottom,Left)
         ),
     ),
 ]
@@ -415,7 +421,7 @@ dgroups_key_binder = None
 dgroups_app_rules = []  # type: list
 follow_mouse_focus = True
 bring_front_click = False
-cursor_warp = False
+cursor_warp = False #This basically puts your mouse in the center on the screen after you switch to another workspace
 floating_layout = layout.Floating(
 	border_focus='#00DC6C',
 	border_normal='#1F1D2E',
@@ -428,7 +434,18 @@ floating_layout = layout.Floating(
         Match(wm_class="maketag"),  # gitk
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(title="branchdialog"),  # gitk
-        Match(title="pinentry"),  # GPG key password entry
+        Match(title="pinentry"),
+        Match(wm_class='confirm'),
+        Match(wm_class='dialog'),
+        Match(wm_class='download'),
+        Match(wm_class='error'),
+        Match(wm_class='file_progress'),
+        Match(wm_class='notification'),
+        Match(wm_class='splash'),
+        Match(wm_class='toolbar'),
+        Match(title='branchdialog'),
+        Match(title='pinentry'),
+        Match(title='Steam'),  # GPG key password entry
     ]
 )
 
