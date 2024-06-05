@@ -78,7 +78,7 @@ keys = [
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod1], "Space", lazy.spawn("rofi -show drun -theme /home/array/.config/rofi/launchers/type-1/style-1.rasi"), desc="Spawn a command using a prompt widget"),
+    Key([mod], "Space", lazy.spawn("rofi -show drun -theme /home/array/.config/rofi/launchers/type-1/style-1.rasi"), desc="Spawn a command using a prompt widget"),
 
 
 ##CUSTOM
@@ -126,7 +126,15 @@ for i in groups:
 ###𝙇𝙖𝙮𝙤𝙪𝙩###
 
 layouts = [
-    
+
+    layout.Columns(
+        margin = 0,
+        border_focus = '#00DC6C',
+        border_normal = '#1F1D2E',
+        border_width = 3,
+    ),
+
+
     layout.MonadWide(
         border_focus = '#00DC6C',
         border_normal = '#1F1D2E',
@@ -134,12 +142,7 @@ layouts = [
         border_width = 1,
     ),
     
-    layout.Columns(
-        margin = 0,
-        border_focus = '#00DC6C',
-        border_normal = '#1F1D2E',
-        border_width = 3,
-    ),
+    
 
     layout.Max(
         border_focus = '#00DC6C',
@@ -407,7 +410,10 @@ screens = [
                 ),
             ],
             30,  # Bar size (all axis)
-            margin = [0,8,6,8] # Bar margin (Top,Right,Bottom,Left)
+            margin = [0,8,6,8], # Bar margin (Top,Right,Bottom,Left)
+            x11_drag_polling_rate = 480,
+            width = 1024,
+            height = 768,
         ),
     ),
 ]
