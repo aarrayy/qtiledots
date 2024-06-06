@@ -36,6 +36,39 @@ terminal = "alacritty" #This is an example on how flexible Qtile is, you create 
 mod1 = "mod1" #alt key
 filemanager = "thunar"
 
+sticky_windows = []
+
+@lazy.function
+def toggle_sticky_windows(qtile, window=None):
+    if window is None:
+        window = qtile.current_screen.group.current_window
+    if window in sticky_windows:
+        sticky_windows.remove(window)
+    else:
+        sticky_windows.append(window)
+    return window
+
+@hook.subscribe.setgroup
+def move_sticky_windows():
+    for window in sticky_windows:
+        window.togroup()
+    return
+
+@hook.subscribe.client_killed
+def remove_sticky_windows(window):
+    if window in sticky_windows:
+        sticky_windows.remove(window)
+
+# Below is an example how to make Firefox Picture-in-Picture windows automatically sticky.
+# I have a German Firefox and don't know if the 'name' is 'Picture-in-Picture'.
+# You can check yourself with `xprop` and then lookup at the line `wm_name`.
+@hook.subscribe.client_managed
+def auto_sticky_windows(window):
+    info = window.info()
+    if (info['wm_class'] == ['Toolkit', 'firefox']
+            and info['name'] == 'Picture-in-Picture'):
+        sticky_windows.append(window)
+
 # █▄▀ █▀▀ █▄█ █▄▄ █ █▄░█ █▀▄ █▀
 # █░█ ██▄ ░█░ █▄█ █ █░▀█ █▄▀ ▄█
 
@@ -79,6 +112,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "Space", lazy.spawn("rofi -show drun -theme /home/array/.config/rofi/launchers/type-1/style-1.rasi"), desc="Spawn a command using a prompt widget"),
+    Key([mod], "s",toggle_sticky_windows(), desc="Toggle state of sticky for current window",),
 
 
 ##CUSTOM
@@ -455,7 +489,9 @@ floating_layout = layout.Floating(
         Match(wm_class='toolbar'),
         Match(title='branchdialog'),
         Match(title='pinentry'),
-        Match(title='Steam'),  # GPG key password entry
+        Match(title='Steam'),
+        Match(title='Steam Settings'),  # GPG key password entry
+        Match(title='Friends List'),  # GPG key password entry
     ]
 )
 
@@ -489,3 +525,4 @@ wl_input_rules = None
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
+
