@@ -36,6 +36,8 @@ terminal = "alacritty" #This is an example on how flexible Qtile is, you create 
 mod1 = "mod1" #alt key
 filemanager = "thunar"
 
+# Sticky windows
+
 sticky_windows = []
 
 @lazy.function
@@ -60,8 +62,6 @@ def remove_sticky_windows(window):
         sticky_windows.remove(window)
 
 # Below is an example how to make Firefox Picture-in-Picture windows automatically sticky.
-# I have a German Firefox and don't know if the 'name' is 'Picture-in-Picture'.
-# You can check yourself with `xprop` and then lookup at the line `wm_name`.
 @hook.subscribe.client_managed
 def auto_sticky_windows(window):
     info = window.info()
@@ -80,6 +80,10 @@ keys = [
     Key([mod], "Right", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "Down", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "Up", lazy.layout.up(), desc="Move focus up"),
+    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
+    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
+    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
+    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
@@ -112,7 +116,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "Space", lazy.spawn("rofi -show drun -theme /home/array/.config/rofi/launchers/type-1/style-1.rasi"), desc="Spawn a command using a prompt widget"),
-    Key([mod], "s",toggle_sticky_windows(), desc="Toggle state of sticky for current window",),
+    Key([mod], "s",toggle_sticky_windows(), desc="Toggle state of sticky for current window"),
 
 
 ##CUSTOM
