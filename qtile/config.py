@@ -453,6 +453,8 @@ screens = [
             width = 1024,
             height = 768,
         ),
+        wallpaper='$HOME/.config/qtile/Wallpaper/Skyscraper.png',
+        wallpaper_mode="fill",
     ),
 ]
 
